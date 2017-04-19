@@ -1,0 +1,439 @@
+name: "conv_lstm_deconv"
+layer {
+  name: "input"
+  type: "Input"
+  top: "data"
+  top: "cont"
+  input_param {
+    shape {
+      dim: 10
+      dim: 1
+      dim: 1
+      dim: 225
+      dim: 225
+    }
+    shape {
+      dim: 10
+      dim: 1
+    }
+  }
+}
+layer {
+  name: "data_slice"
+  type: "Slice"
+  bottom: "data"
+  top: "data_slice_1"
+  top: "data_slice_2"
+  slice_param{
+    axis: 0
+    slice_point: 9
+  }
+}
+layer {
+  name: "data_slice_2_silence"
+  type: "Silence"
+  bottom: "data_slice_2"
+}
+layer {
+  name: "conv1"
+  type: "Convolution"
+  bottom: "data"
+  top: "conv1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  } 
+  convolution_param {
+    num_output: 128
+    pad: 3
+    kernel_size: 7
+    stride: 4
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+    engine: CUDNN
+    axis: 2
+  }
+}
+layer {
+  name: "conv_relu1"
+  type: "ReLU"
+  bottom: "conv1"
+  top: "conv1"
+  relu_param {
+    engine: CAFFE
+  }
+}
+layer {
+  name: "conv2"
+  type: "Convolution"
+  bottom: "conv1"
+  top: "conv2"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  } 
+  convolution_param {
+    num_output: 256
+    pad: 2
+    kernel_size: 5
+    stride: 2
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+    engine: CUDNN
+    axis: 2
+  }
+}
+layer {
+  name: "conv_relu2"
+  type: "ReLU"
+  bottom: "conv2"
+  top: "conv2"
+  relu_param {
+    engine: CAFFE
+  } 
+}
+layer {
+  name: "conv3"
+  type: "Convolution"
+  bottom: "conv2"
+  top: "conv3"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  } 
+  convolution_param {
+    num_output: 512
+    pad: 1
+    kernel_size: 3
+    stride: 2
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+    engine: CUDNN
+    axis: 2
+  }
+}
+layer {
+  name: "conv_relu3"
+  type: "ReLU"
+  bottom: "conv3"
+  top: "conv3"
+  relu_param {
+    engine: CAFFE
+  }
+}
+layer {
+  name: "convlstm1"
+  type: "ConvolutionLSTM"
+  bottom: "conv3"
+  bottom: "cont"
+  top: "convlstm1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  recurrent_param {
+    num_output: 512
+    wxc_convolution_param {
+      pad: 1
+      kernel_size: 3
+      stride: 1
+      weight_filler {
+        type: "xavier"
+      }
+      bias_filler {
+        type: "constant"
+        value: 0
+      }
+      engine: CUDNN
+    }
+    whh_convolution_param {
+      bias_term: false
+      pad: 1
+      kernel_size: 3
+      stride: 1
+      weight_filler {
+        type: "xavier"
+      }
+      engine: CUDNN
+    }
+  }
+}
+layer {
+  name: "convlstm1_slice"
+  type: "Slice"
+  bottom: "convlstm1"
+  top: "convlstm1_slice_1"
+  top: "convlstm1_slice_2"
+  slice_param{
+    axis: 0
+    slice_point: 1
+  }
+}
+layer {
+  name: "convlstm1_slice_1_silence"
+  type: "Silence"
+  bottom: "convlstm1_slice_1"
+}
+layer {
+  name: "deconv1_1"
+  type: "Deconvolution"
+  bottom: "convlstm1"
+  top: "deconv1_1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  } 
+  convolution_param {
+    num_output: 256
+    pad: 1
+    kernel_size: 3
+    stride: 2
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+    engine: CUDNN
+    axis: 2
+  }
+}
+layer {
+  name: "deconv_relu1_1"
+  type: "ReLU"
+  bottom: "deconv1_1"
+  top: "deconv1_1"
+  relu_param {
+    engine: CAFFE
+  }
+}
+layer {
+  name: "deconv2_1"
+  type: "Deconvolution"
+  bottom: "deconv1_1"
+  top: "deconv2_1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  } 
+  convolution_param {
+    num_output: 128
+    pad: 2
+    kernel_size: 5
+    stride: 2
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+    engine: CUDNN
+    axis: 2
+  }
+}
+layer {
+  name: "deconv_relu2_1"
+  type: "ReLU"
+  bottom: "deconv2_1"
+  top: "deconv2_1"
+  relu_param {
+    engine: CAFFE
+  }
+}
+layer {
+  name: "deconv3_1"
+  type: "Deconvolution"
+  bottom: "deconv2_1"
+  top: "deconv3_1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  } 
+  convolution_param {
+    num_output: 1
+    pad: 3
+    kernel_size: 7
+    stride: 4
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+    engine: CUDNN
+    axis: 2
+  }
+}
+layer {
+  name: "deconv_tanh3_1"
+  type: "TanH"
+  bottom: "deconv3_1"
+  top: "deconv3_1"
+  tanh_param {
+    engine: CAFFE
+  }
+}
+layer {
+  name: "deconv1_2"
+  type: "Deconvolution"
+  bottom: "convlstm1_slice_2"
+  top: "deconv1_2"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  } 
+  convolution_param {
+    num_output: 256
+    pad: 1
+    kernel_size: 3
+    stride: 2
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+    engine: CUDNN
+    axis: 2
+  }
+}
+layer {
+  name: "deconv_relu1_2"
+  type: "ReLU"
+  bottom: "deconv1_2"
+  top: "deconv1_2"
+  relu_param {
+    engine: CAFFE
+  }
+}
+layer {
+  name: "deconv2_2"
+  type: "Deconvolution"
+  bottom: "deconv1_2"
+  top: "deconv2_2"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  } 
+  convolution_param {
+    num_output: 128
+    pad: 2
+    kernel_size: 5
+    stride: 2
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+    engine: CUDNN
+    axis: 2
+  }
+}
+layer {
+  name: "deconv_relu2_2"
+  type: "ReLU"
+  bottom: "deconv2_2"
+  top: "deconv2_2"
+  relu_param {
+    engine: CAFFE
+  }
+}
+layer {
+  name: "deconv3_2"
+  type: "Deconvolution"
+  bottom: "deconv2_2"
+  top: "deconv3_2"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  } 
+  convolution_param {
+    num_output: 1
+    pad: 3
+    kernel_size: 7
+    stride: 4
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+    engine: CUDNN
+    axis: 2
+  }
+}
+layer {
+  name: "deconv_tanh3_2"
+  type: "TanH"
+  bottom: "deconv3_2"
+  top: "deconv3_2"
+  tanh_param {
+    engine: CAFFE
+  }
+}

@@ -1,0 +1,16 @@
+/home/luowx/datasets/avenue/training_videos/01.avi
+/home/luowx/datasets/avenue/training_videos/02.avi
+/home/luowx/datasets/avenue/training_videos/03.avi
+/home/luowx/datasets/avenue/training_videos/04.avi
+/home/luowx/datasets/avenue/training_videos/05.avi
+/home/luowx/datasets/avenue/training_videos/06.avi
+/home/luowx/datasets/avenue/training_videos/07.avi
+/home/luowx/datasets/avenue/training_videos/08.avi
+/home/luowx/datasets/avenue/training_videos/09.avi
+/home/luowx/datasets/avenue/training_videos/10.avi
+/home/luowx/datasets/avenue/training_videos/11.avi
+/home/luowx/datasets/avenue/training_videos/12.avi
+/home/luowx/datasets/avenue/training_videos/13.avi
+/home/luowx/datasets/avenue/training_videos/14.avi
+/home/luowx/datasets/avenue/training_videos/15.avi
+/home/luowx/datasets/avenue/training_videos/16.avi
