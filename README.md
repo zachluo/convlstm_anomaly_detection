@@ -1,37 +1,31 @@
-# Caffe
+#REMEMBERING HISTORY WITH CONVOLUTIONAL LSTM FOR ANOMALY DETECTION
 
-[![Build Status](https://travis-ci.org/BVLC/caffe.svg?branch=master)](https://travis-ci.org/BVLC/caffe)
-[![License](https://img.shields.io/badge/license-BSD-blue.svg)](LICENSE)
+By Weixin Luo$^{*}$, Wen Liu$^{*}$, Shenghua Gao
 
-Caffe is a deep learning framework made with expression, speed, and modularity in mind.
-It is developed by the Berkeley Vision and Learning Center ([BVLC](http://bvlc.eecs.berkeley.edu)) and community contributors.
+## Introduction
+All codes are based on [Caffe](https://github.com/BVLC/caffe).
+The main modifications are following
+* Adding [a convolutional lstm layer](https://github.com/StevenLiuWen/convlstm_anomaly_detection/blob/master/include/caffe/layers/conv_lstm_layer.hpp)
+* Changing the original **Blob** datastructure from 4-dimension tensor $(N \times C \times H \times W)$  to 5-dimension tensor $(T \times  N \times C \times H \times W)$ tensor. **Be careful that do not use cuDNN engien in all activation function layers in this motidified Caffe version, such as ReLU, sigmoid, tanh and so on, because cuDNN do not support 5-dimension in these activation function (but Conv layer is ok). If do that, it will be wrong.**
+* Adding a [video data layers](https://github.com/StevenLiuWen/convlstm_anomaly_detection/blob/master/include/caffe/layers/video_data_layer.hpp)
 
-Check out the [project site](http://caffe.berkeleyvision.org) for all the details like
+## Requirements for compiling
+Since all the code are implemented on Caffe, so that in order to compile successfully, it must satisfy all requirements of Caffe ([see the installization instruction](http://caffe.berkeleyvision.org/installation.html)).
+Whatmore, it also need to compile with Opencv 3.+, because the [video data layer](https://github.com/StevenLiuWen/convlstm_anomaly_detection/blob/master/include/caffe/layers/video_data_layer.hpp) uses opencv libraries. 
 
-- [DIY Deep Learning for Vision with Caffe](https://docs.google.com/presentation/d/1UeKXVgRvvxg9OUdh_UiC5G71UMscNPlvArsWER41PsU/edit#slide=id.p)
-- [Tutorial Documentation](http://caffe.berkeleyvision.org/tutorial/)
-- [BVLC reference models](http://caffe.berkeleyvision.org/model_zoo.html) and the [community model zoo](https://github.com/BVLC/caffe/wiki/Model-Zoo)
-- [Installation instructions](http://caffe.berkeleyvision.org/installation.html)
+## Datasets
+>* **CUHK Avenue**
+>* **UCSD Pedestrians 1 & 2**
+>* **Subway Enter & Exit**
+ please to contact the orginal author to get the download links.
 
-and step-by-step examples.
 
-[![Join the chat at https://gitter.im/BVLC/caffe](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/BVLC/caffe?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+## Training 
+As **CUHK Avenue** dataset for example, details are showd in the [zstorm_conv_lstm_deconv/solver.prototxt](https://github.com/StevenLiuWen/convlstm_anomaly_detection/blob/master/zstorm_conv_lstm_deconv/solver.prototxt) and [zstorm_conv_lstm_deconv/train.prototxt](https://github.com/StevenLiuWen/convlstm_anomaly_detection/blob/master/zstorm_conv_lstm_deconv/train.prototxt).
 
-Please join the [caffe-users group](https://groups.google.com/forum/#!forum/caffe-users) or [gitter chat](https://gitter.im/BVLC/caffe) to ask questions and talk about methods and models.
-Framework development discussions and thorough bug reports are collected on [Issues](https://github.com/BVLC/caffe/issues).
+## Testing or evaluation
+Details are in the python shell, [zstorm_conv_lstm_deconv/test.py](https://github.com/StevenLiuWen/convlstm_anomaly_detection/blob/master/zstorm_conv_lstm_deconv/test.py).
 
-Happy brewing!
+## License 
 
-## License and Citation
-
-Caffe is released under the [BSD 2-Clause license](https://github.com/BVLC/caffe/blob/master/LICENSE).
-The BVLC reference models are released for unrestricted use.
-
-Please cite Caffe in your publications if it helps your research:
-
-    @article{jia2014caffe,
-      Author = {Jia, Yangqing and Shelhamer, Evan and Donahue, Jeff and Karayev, Sergey and Long, Jonathan and Girshick, Ross and Guadarrama, Sergio and Darrell, Trevor},
-      Journal = {arXiv preprint arXiv:1408.5093},
-      Title = {Caffe: Convolutional Architecture for Fast Feature Embedding},
-      Year = {2014}
-    }
+All code are following the license of Caffe, and Caffe is released under the [BSD 2-Clause license](https://github.com/BVLC/caffe/blob/master/LICENSE).
