@@ -29,3 +29,13 @@ Details are in the python shell, [zstorm_conv_lstm_deconv/test.py](https://githu
 ## License 
 
 All code are following the license of Caffe, and Caffe is released under the [BSD 2-Clause license](https://github.com/BVLC/caffe/blob/master/LICENSE).
+
+## Citation
+If you find this useful, please cite our work as follows:
+
+@INPROCEEDINGS{luo2017remember, 
+	author={W. Luo, W. Liu and S. Gao}, 
+	booktitle={2017 IEEE International Conference on Multimedia and Expo (ICME)}, 
+	title={Remembering history with convolutional LSTM for anomaly detection}, 
+	year={2017}
+}
