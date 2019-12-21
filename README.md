@@ -1,6 +1,6 @@
 # REMEMBERING HISTORY WITH CONVOLUTIONAL LSTM FOR ANOMALY DETECTION
 
-By Weixin Luo$^{*}$, Wen Liu$^{*}$, Shenghua Gao
+By Weixin Luo, Wen Liu, Shenghua Gao
 
 ## Introduction
 All codes are based on [Caffe](https://github.com/BVLC/caffe).
